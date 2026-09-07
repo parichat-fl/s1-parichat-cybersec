@@ -4,18 +4,15 @@
 
 ความคาดหวังของวิชานี้: ต้องการเรียนรู้และพัฒนาทักษะเกี่ยวกับ Git, GitHub และ Docker รวมถึงเข้าใจการจัดการโปรเจกต์และการทำงานร่วมกันอย่างเป็นระบบ เพื่อนำความรู้ที่ได้รับไปประยุกต์ใช้ในการพัฒนาโปรเจกต์จริงในอนาคต
 
-## โจทย์
-
-ให้นักศึกษาส่งภาพ **Process ของการรัน PostgreSQL และ pgAdmin4** พร้อมทั้งแสดง **สถานะการเชื่อมต่อฐานข้อมูลที่อยู่ใน pgAdmin4**
-
-โดยใช้ข้อมูลต่อไปนี้
-
-- ชื่อ Container: `69-s1-admin`
-- Port: `80801`
-
-### สิ่งที่ต้องส่ง
-
-1. ภาพ Process การรัน PostgreSQL และ pgAdmin4
-2. ภาพที่แสดงชื่อ Container `69-s1-admin`
-3. ภาพที่แสดง Port `80801`
-4. ภาพสถานะการเชื่อมต่อฐานข้อมูลใน pgAdmin4
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: 69-s1-db
+    ports:
+      - ${POSTGRES_PORT}:5432
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_DB=${POSTGRES_DB}
+    volumes:
+      - ./data/data:/var/lib/postgresql/data
