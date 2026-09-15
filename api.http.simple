@@ -1,0 +1,99 @@
+# 1. ADMIN API
+
+## 1.1 Admin Signup
+POST http://localhost:8181/admin/register-admin
+content-type: application/json
+
+{
+  "firstname": "",
+  "lastname": "",
+  "email": "",
+  "password": ""
+}
+###
+
+## 1.2 Admin Login
+# @name adminLogin
+POST http://localhost:8181/admin/login
+content-type: application/json
+
+{
+  "email": "",
+  "password": "",
+  "rememberMe": false
+}
+###
+
+## 1.3 Admin Profile
+GET http://localhost:8181/admin/users/me
+Authorization: Bearer {{adminLogin.response.body.data.token}}
+###
+
+## 1.3.1 Admin Reset Password
+POST http://localhost:8181/admin/reset-password
+content-type: application/json
+
+{
+  "password": "",
+  "resetPasswordToken": ""
+}
+###
+
+## 1.4 Admin Forgot Password
+POST http://localhost:8181/admin/forgot-password
+content-type: application/json
+
+{
+  "email": ""
+}
+###
+
+
+# 2. USER API
+
+## 2.1 User Signup
+POST http://localhost:8181/api/auth/local/register
+content-type: application/json
+
+{
+  "username": "",
+  "email": "",
+  "password": ""
+}
+###
+
+## 2.2 User Login
+# @name userLogin
+POST http://localhost:8181/api/auth/local
+content-type: application/json
+
+{
+  "identifier": "",
+  "password": ""
+}
+###
+
+## 2.3 User Profile
+GET http://localhost:8181/api/users/me
+Authorization: Bearer {{userLogin.response.body.jwt}}
+###
+
+## 2.3.1 User Reset Password
+POST http://localhost:8181/api/auth/reset-password
+content-type: application/json
+
+{
+  "code": "",
+  "password": "",
+  "passwordConfirmation": ""
+}
+###
+
+## 2.4 User Forgot Password
+POST http://localhost:8181/api/auth/forgot-password
+content-type: application/json
+
+{
+  "email": ""
+}
+###
