@@ -89,11 +89,9 @@ docker compose down -v       # หยุดและลบข้อมูลท�
 | --- | --- |
 | `main` | งานที่รวมเข้า `develop` แล้ว |
 | `develop` | รวมงานจากทุก feature branch |
-| `feat/db` | PostgreSQL, pgAdmin และ healthcheck |
+| `feat/db` | PostgreSQL, pgAdmin, healthcheck และ `.gitignore` |
 | `feat/app` | Strapi service |
-| `feat/rest` | ชุดทดสอบ REST API |
-| `feat/admin` | คู่มือ Admin Panel |
-| `feat/security` | เอกสารความปลอดภัย |
+| `feat/rest` | ชุดทดสอบ REST API และเอกสารคู่มือ |
 
 แต่ละ branch merge เข้า `develop` แบบ `--no-ff` เพื่อเก็บประวัติการ merge
 
