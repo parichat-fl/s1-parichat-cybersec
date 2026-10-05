@@ -1,7 +1,15 @@
-# 1. ADMIN API
+# API requests
+# Copy this file to api.http and fill in your own credentials.
+# api.http is ignored by Git because it contains real credentials.
 
-## 1.1 Admin Signup
-POST http://localhost:8181/admin/register-admin
+@baseUrl = http://localhost:8181
+
+### ============================================================================
+### 1. ADMIN API
+### ============================================================================
+
+### 1.1 Admin Signup
+POST {{baseUrl}}/admin/register-admin
 content-type: application/json
 
 {
@@ -10,11 +18,10 @@ content-type: application/json
   "email": "",
   "password": ""
 }
-###
 
-## 1.2 Admin Login
+### 1.2 Admin Login
 # @name adminLogin
-POST http://localhost:8181/admin/login
+POST {{baseUrl}}/admin/login
 content-type: application/json
 
 {
@@ -22,37 +29,36 @@ content-type: application/json
   "password": "",
   "rememberMe": false
 }
-###
 
-## 1.3 Admin Profile
-GET http://localhost:8181/admin/users/me
+### 1.3 Admin Profile
+GET {{baseUrl}}/admin/users/me
 Authorization: Bearer {{adminLogin.response.body.data.token}}
-###
 
-## 1.3.1 Admin Reset Password
-POST http://localhost:8181/admin/reset-password
+### 1.4 Admin Forgot Password
+POST {{baseUrl}}/admin/forgot-password
+content-type: application/json
+
+{
+  "email": ""
+}
+
+### 1.5 Admin Reset Password
+POST {{baseUrl}}/admin/reset-password
 content-type: application/json
 
 {
   "password": "",
   "resetPasswordToken": ""
 }
-###
-
-## 1.4 Admin Forgot Password
-POST http://localhost:8181/admin/forgot-password
-content-type: application/json
-
-{
-  "email": ""
-}
-###
 
 
-# 2. USER API
+### ============================================================================
+### 2. USER API
+### ============================================================================
 
-## 2.1 User Signup
-POST http://localhost:8181/api/auth/local/register
+### 2.1 User Signup
+# @name userRegister
+POST {{baseUrl}}/api/auth/local/register
 content-type: application/json
 
 {
@@ -60,26 +66,31 @@ content-type: application/json
   "email": "",
   "password": ""
 }
-###
 
-## 2.2 User Login
+### 2.2 User Login
 # @name userLogin
-POST http://localhost:8181/api/auth/local
+POST {{baseUrl}}/api/auth/local
 content-type: application/json
 
 {
   "identifier": "",
   "password": ""
 }
-###
 
-## 2.3 User Profile
-GET http://localhost:8181/api/users/me
+### 2.3 User Profile
+GET {{baseUrl}}/api/users/me
 Authorization: Bearer {{userLogin.response.body.jwt}}
-###
 
-## 2.3.1 User Reset Password
-POST http://localhost:8181/api/auth/reset-password
+### 2.4 User Forgot Password
+POST {{baseUrl}}/api/auth/forgot-password
+content-type: application/json
+
+{
+  "email": ""
+}
+
+### 2.5 User Reset Password
+POST {{baseUrl}}/api/auth/reset-password
 content-type: application/json
 
 {
@@ -87,13 +98,120 @@ content-type: application/json
   "password": "",
   "passwordConfirmation": ""
 }
-###
 
-## 2.4 User Forgot Password
-POST http://localhost:8181/api/auth/forgot-password
+
+### ============================================================================
+### 3. CONTENT API
+### ============================================================================
+
+### 3.1 Student
+
+#### 3.1.1 Create
+POST {{baseUrl}}/api/students
 content-type: application/json
+Authorization: Bearer {{adminLogin.response.body.data.token}}
 
 {
-  "email": ""
+  "data": {
+    "name": "",
+    "mobile": "",
+    "cardId": ""
+  }
 }
-###
+
+#### 3.1.2 List All
+GET {{baseUrl}}/api/students
+Authorization: Bearer {{adminLogin.response.body.data.token}}
+
+#### 3.1.3 List with ID
+GET {{baseUrl}}/api/students/1
+Authorization: Bearer {{adminLogin.response.body.data.token}}
+
+#### 3.1.4 Update
+PUT {{baseUrl}}/api/students/1
+content-type: application/json
+Authorization: Bearer {{adminLogin.response.body.data.token}}
+
+{
+  "data": {
+    "name": "",
+    "mobile": "",
+    "cardId": ""
+  }
+}
+
+#### 3.1.5 Delete
+DELETE {{baseUrl}}/api/students/1
+Authorization: Bearer {{adminLogin.response.body.data.token}}
+
+### 3.2 Subject
+
+#### 3.2.1 Create
+POST {{baseUrl}}/api/subjects
+content-type: application/json
+Authorization: Bearer {{adminLogin.response.body.data.token}}
+
+{
+  "data": {
+    "name": ""
+  }
+}
+
+#### 3.2.2 List All
+GET {{baseUrl}}/api/subjects
+Authorization: Bearer {{adminLogin.response.body.data.token}}
+
+#### 3.2.3 List with ID
+GET {{baseUrl}}/api/subjects/1
+Authorization: Bearer {{adminLogin.response.body.data.token}}
+
+#### 3.2.4 Update
+PUT {{baseUrl}}/api/subjects/1
+content-type: application/json
+Authorization: Bearer {{adminLogin.response.body.data.token}}
+
+{
+  "data": {
+    "name": ""
+  }
+}
+
+#### 3.2.5 Delete
+DELETE {{baseUrl}}/api/subjects/1
+Authorization: Bearer {{adminLogin.response.body.data.token}}
+
+### 3.3 Teacher
+
+#### 3.3.1 Create
+POST {{baseUrl}}/api/teachers
+content-type: application/json
+Authorization: Bearer {{adminLogin.response.body.data.token}}
+
+{
+  "data": {
+    "name": ""
+  }
+}
+
+#### 3.3.2 List All
+GET {{baseUrl}}/api/teachers
+Authorization: Bearer {{adminLogin.response.body.data.token}}
+
+#### 3.3.3 List with ID
+GET {{baseUrl}}/api/teachers/1
+Authorization: Bearer {{adminLogin.response.body.data.token}}
+
+#### 3.3.4 Update
+PUT {{baseUrl}}/api/teachers/1
+content-type: application/json
+Authorization: Bearer {{adminLogin.response.body.data.token}}
+
+{
+  "data": {
+    "name": ""
+  }
+}
+
+#### 3.3.5 Delete
+DELETE {{baseUrl}}/api/teachers/1
+Authorization: Bearer {{adminLogin.response.body.data.token}}

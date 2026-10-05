@@ -1,3 +1,16 @@
+# OS files
 .DS_Store
-data/
+Thumbs.db
+
+# Environment variables and secrets
 .env
+.env.*
+!.env.simple
+*.env
+
+# API test file with real credentials
+api.http
+
+# Database and pgAdmin persistent storage
+data/
+pgadmin/
