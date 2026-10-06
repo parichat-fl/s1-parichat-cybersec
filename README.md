@@ -68,6 +68,10 @@ docker compose down -v       # หยุดและลบข้อมูลท�
 - `2. USER API` — register, login, profile, forgot/reset password
 - `3. CONTENT API` — CRUD ของ `students`, `subjects`, `teachers`
 
+`3. CONTENT API` ใช้ jwt จาก `2.2 User Login` เพราะ token ของ Admin ใช้กับ
+content API ไม่ได้ (คนละ secret กัน) และต้องตั้งสิทธิ์ role Authenticated
+ครั้งแรกก่อน วิธีตั้งค่าดูที่ [docs/ADMIN.md](docs/ADMIN.md)
+
 Forgot Password จะส่งอีเมลผ่าน mock provider และพิมพ์ reset code ลง log อ่านได้จาก
 
 ```bash

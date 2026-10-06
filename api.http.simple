@@ -119,116 +119,133 @@ content-type: application/json
 
 ### ============================================================================
 ### 3. CONTENT API
+### ต้องรัน 2.2 User Login ก่อน เพราะใช้ jwt ของ User
+# (token ของ Admin ใช้กับ content API ไม่ได้ เป็นคนละ secret กัน)
+# ต้องมีสิทธิ์ role Authenticated สำหรับ student/subject/teacher ก่อน
+# วิธีตั้งค่าครั้งเดียว ดูที่ docs/ADMIN.md
 ### ============================================================================
 
 ### 3.1 Student
 
 #### 3.1.1 Create
+# name ต้องไม่ว่าง / mobile 10 หลัก ไม่ซ้ำ / cardId 13 หลัก ไม่ซ้ำ
+# publishedAt ต้องใส่ ไม่งั้นจะเป็น draft และไม่ขึ้นใน List All
+# หมายเหตุ: mobile ถูก md5 อัตโนมัติก่อนบันทึก (lifecycle ของ content type นี้)
+# @name studentCreate
 POST {{baseUrl}}/api/students
 content-type: application/json
-Authorization: Bearer {{adminLogin.response.body.data.token}}
+Authorization: Bearer {{userLogin.response.body.jwt}}
 
 {
   "data": {
     "name": "",
     "mobile": "",
-    "cardId": ""
+    "cardId": "",
+    "publishedAt": "2026-10-06T00:00:00.000Z"
   }
 }
 
 #### 3.1.2 List All
 GET {{baseUrl}}/api/students
-Authorization: Bearer {{adminLogin.response.body.data.token}}
+Authorization: Bearer {{userLogin.response.body.jwt}}
 
 #### 3.1.3 List with ID
-GET {{baseUrl}}/api/students/1
-Authorization: Bearer {{adminLogin.response.body.data.token}}
+# ใช้ id จาก response ของ 3.1.1 (ถ้าไม่ได้รัน 3.1.1 ให้แทนด้วย id จริง)
+GET {{baseUrl}}/api/students/{{studentCreate.response.body.data.id}}
+Authorization: Bearer {{userLogin.response.body.jwt}}
 
 #### 3.1.4 Update
-PUT {{baseUrl}}/api/students/1
+PUT {{baseUrl}}/api/students/{{studentCreate.response.body.data.id}}
 content-type: application/json
-Authorization: Bearer {{adminLogin.response.body.data.token}}
+Authorization: Bearer {{userLogin.response.body.jwt}}
 
 {
   "data": {
     "name": "",
     "mobile": "",
-    "cardId": ""
+    "cardId": "",
+    "publishedAt": "2026-10-06T00:00:00.000Z"
   }
 }
 
 #### 3.1.5 Delete
-DELETE {{baseUrl}}/api/students/1
-Authorization: Bearer {{adminLogin.response.body.data.token}}
+DELETE {{baseUrl}}/api/students/{{studentCreate.response.body.data.id}}
+Authorization: Bearer {{userLogin.response.body.jwt}}
 
 ### 3.2 Subject
 
 #### 3.2.1 Create
+# @name subjectCreate
 POST {{baseUrl}}/api/subjects
 content-type: application/json
-Authorization: Bearer {{adminLogin.response.body.data.token}}
+Authorization: Bearer {{userLogin.response.body.jwt}}
 
 {
   "data": {
-    "name": ""
+    "name": "",
+    "publishedAt": "2026-10-06T00:00:00.000Z"
   }
 }
 
 #### 3.2.2 List All
 GET {{baseUrl}}/api/subjects
-Authorization: Bearer {{adminLogin.response.body.data.token}}
+Authorization: Bearer {{userLogin.response.body.jwt}}
 
 #### 3.2.3 List with ID
-GET {{baseUrl}}/api/subjects/1
-Authorization: Bearer {{adminLogin.response.body.data.token}}
+GET {{baseUrl}}/api/subjects/{{subjectCreate.response.body.data.id}}
+Authorization: Bearer {{userLogin.response.body.jwt}}
 
 #### 3.2.4 Update
-PUT {{baseUrl}}/api/subjects/1
+PUT {{baseUrl}}/api/subjects/{{subjectCreate.response.body.data.id}}
 content-type: application/json
-Authorization: Bearer {{adminLogin.response.body.data.token}}
+Authorization: Bearer {{userLogin.response.body.jwt}}
 
 {
   "data": {
-    "name": ""
+    "name": "",
+    "publishedAt": "2026-10-06T00:00:00.000Z"
   }
 }
 
 #### 3.2.5 Delete
-DELETE {{baseUrl}}/api/subjects/1
-Authorization: Bearer {{adminLogin.response.body.data.token}}
+DELETE {{baseUrl}}/api/subjects/{{subjectCreate.response.body.data.id}}
+Authorization: Bearer {{userLogin.response.body.jwt}}
 
 ### 3.3 Teacher
 
 #### 3.3.1 Create
+# @name teacherCreate
 POST {{baseUrl}}/api/teachers
 content-type: application/json
-Authorization: Bearer {{adminLogin.response.body.data.token}}
+Authorization: Bearer {{userLogin.response.body.jwt}}
 
 {
   "data": {
-    "name": ""
+    "name": "",
+    "publishedAt": "2026-10-06T00:00:00.000Z"
   }
 }
 
 #### 3.3.2 List All
 GET {{baseUrl}}/api/teachers
-Authorization: Bearer {{adminLogin.response.body.data.token}}
+Authorization: Bearer {{userLogin.response.body.jwt}}
 
 #### 3.3.3 List with ID
-GET {{baseUrl}}/api/teachers/1
-Authorization: Bearer {{adminLogin.response.body.data.token}}
+GET {{baseUrl}}/api/teachers/{{teacherCreate.response.body.data.id}}
+Authorization: Bearer {{userLogin.response.body.jwt}}
 
 #### 3.3.4 Update
-PUT {{baseUrl}}/api/teachers/1
+PUT {{baseUrl}}/api/teachers/{{teacherCreate.response.body.data.id}}
 content-type: application/json
-Authorization: Bearer {{adminLogin.response.body.data.token}}
+Authorization: Bearer {{userLogin.response.body.jwt}}
 
 {
   "data": {
-    "name": ""
+    "name": "",
+    "publishedAt": "2026-10-06T00:00:00.000Z"
   }
 }
 
 #### 3.3.5 Delete
-DELETE {{baseUrl}}/api/teachers/1
-Authorization: Bearer {{adminLogin.response.body.data.token}}
+DELETE {{baseUrl}}/api/teachers/{{teacherCreate.response.body.data.id}}
+Authorization: Bearer {{userLogin.response.body.jwt}}
