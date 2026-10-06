@@ -64,15 +64,26 @@ docker compose down -v       # หยุดและลบข้อมูลท�
 เปิด `api.http` ด้วย VS Code REST Client แล้วรันตามลำดับ ต้องรัน Login ก่อนเสมอ
 เพราะ request อื่นดึง token จาก response ของ Login ผ่าน `# @name`
 
-- `1. ADMIN API` — signup, login, profile, forgot/reset password
+- `1. ADMIN API` — register, login, profile, forgot/reset password
 - `2. USER API` — register, login, profile, forgot/reset password
 - `3. CONTENT API` — CRUD ของ `students`, `subjects`, `teachers`
+
+Forgot Password จะส่งอีเมลผ่าน mock provider และพิมพ์ reset code ลง log อ่านได้จาก
+
+```bash
+docker logs 69-s1-app
+```
+
+แล้วเอา code ไปใส่ใน request Reset Password (ใช้ได้ครั้งเดียว ต้องรัน Forgot ใหม่ทุกครั้ง)
 
 ## Repository Structure
 
 ```
 .
 ├── api.http.simple         # เทมเพลตชุดทดสอบ API (25 requests)
+├── config/                 # ตั้งค่า Strapi (database, email mock, url ของแอป)
+│   └── providers/
+│       └── email-mock/     # email จำลอง ใช้ตอนทดสอบ Forgot/Reset Password
 ├── docker-compose.yml      # db + admin + app
 ├── docs/
 │   ├── ADMIN.md            # คู่มือ Admin Panel
