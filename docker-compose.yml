@@ -1,9 +1,8 @@
-version: '3.8'
-
 services:
   db:
     image: postgres:16-alpine
     container_name: 69-s1-db
+    restart: unless-stopped
     ports:
       - "${DB_PORT}:5432"
     environment:
@@ -12,10 +11,16 @@ services:
       - POSTGRES_DB=${DB_NAME}
     volumes:
       - ./data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   admin:
     image: dpage/pgadmin4
     container_name: 69-s1-admin
+    restart: unless-stopped
     ports:
       - "${PG_PORT}:80"
     environment:
@@ -24,25 +29,39 @@ services:
     volumes:
       - ./pgadmin:/var/lib/pgadmin
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
   app:
     image: prawee/strapi
     container_name: 69-s1-app
+    restart: unless-stopped
     ports:
       - "${APP_PORT}:1337"
     environment:
       - DATABASE_CLIENT=postgres
-      - DATABASE_HOST=172.26.64.1
-      - DATABASE_PORT=${DB_PORT}
+      - DATABASE_HOST=69-s1-db
+      - DATABASE_PORT=5432
       - DATABASE_NAME=${DB_NAME}
       - DATABASE_USERNAME=${DB_USER}
       - DATABASE_PASSWORD=${DB_PASS}
       - DATABASE_SSL=false
       - JWT_SECRET=${APP_JWT_SECRET}
       - ADMIN_JWT_SECRET=${APP_ADMIN_JWT_SECRET}
+      - APP_PORT=${APP_PORT}
+      - URL=${URL:-}
       - APP_KEYS=${APP_KEYS}
       - API_TOKEN_SALT=${APP_API_TOKEN_SALT}
       - TRANSFER_TOKEN_SALT=${APP_TRANSFER_TOKEN_SALT}
+      - EMAIL_PROVIDER=${EMAIL_PROVIDER:-}
+      - SMTP_HOST=${SMTP_HOST:-}
+      - SMTP_PORT=${SMTP_PORT:-587}
+      - SMTP_USERNAME=${SMTP_USERNAME:-}
+      - SMTP_PASSWORD=${SMTP_PASSWORD:-}
+      - EMAIL_DEFAULT_FROM=${EMAIL_DEFAULT_FROM:-no-reply@strapi.io}
+      - EMAIL_DEFAULT_REPLY_TO=${EMAIL_DEFAULT_REPLY_TO:-no-reply@strapi.io}
+    volumes:
+      - ./config:/opt/app/config
     depends_on:
-      - db
+      db:
+        condition: service_healthy
