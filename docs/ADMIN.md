@@ -57,6 +57,53 @@ Token ถูกดึงอัตโนมัติผ่าน `# @name` เช
 3. รัน Reset Password (1.5 หรือ 2.5) ด้วย code นั้น (ใช้ได้ครั้งเดียว)
 4. ถ้าเปลี่ยน password ต้องรัน Login ใหม่เพื่อเอา token ตัวใหม่
 
+## Content API (ส่วนที่ 3)
+
+ชุด request CRUD ของ Student, Subject, Teacher อยู่ใน `api.http.simple`
+หมวด `3. CONTENT API` ประกอบด้วย
+
+| หัวข้อ | Endpoint | หมายเหตุ |
+| --- | --- | --- |
+| 3.1.1–3.1.5 Student | `/api/students` | `mobile` 10 หลัก + `cardId` 13 หลัก ห้ามซ้ำ |
+| 3.2.1–3.2.5 Subject | `/api/subjects` | `name` ห้ามซ้ำ |
+| 3.3.1–3.3.5 Teacher | `/api/teachers` | มี relation `mappings` |
+
+แต่ละชุดมี Create, List All, List with ID, Update, Delete
+
+### การยืนยันตัวตน
+
+Content API อยู่ภายใต้ plugin Users & Permissions จึงต้องใช้ **jwt ของ User**
+จาก `2.2 User Login` เท่านั้น — token จาก `1.2 Admin Login` จะได้ 401 เพราะ
+Strapi แยก secret ของ Admin กับ User ออกเป็นคนละตัว
+
+### ตั้งสิทธิ์ครั้งแรก (ทำครั้งเดียว)
+
+1. เข้า Admin Panel → **Settings → Users & Permissions → Roles → Authenticated**
+2. ติ๊กสิทธิ์ของ `student`, `subject`, `teacher` ทั้ง
+   `find`, `findOne`, `create`, `update`, `delete`
+3. กด **Save** แล้วรัน `2.2 User Login` ก่อนใช้หมวด 3
+
+ถ้าหน้า Settings เปิดไม่ขึ้น ตั้งผ่าน API ได้ (ใช้ token จาก `1.2`)
+
+```
+GET  /users-permissions/roles        # ดูรายการ role (id ของ Authenticated = 1)
+PUT  /users-permissions/roles/1      # body: name, description, permissions
+```
+
+### ข้อควรระวังของข้อมูล
+
+- content type ทั้งสามเปิด **draft & publish** จึงต้องใส่ `publishedAt`
+  ใน Create/Update ไม่งั้นข้อมูลจะเป็น draft และไม่ขึ้นใน List All
+- `Student.mobile` ถูกเปลี่ยนเป็น md5 อัตโนมัติก่อนบันทึก
+  (lifecycle ใน `src/api/student/content-types/student/lifecycles.js`)
+- ข้อมูลตัวอย่างที่อยู่ในระบบแล้ว
+
+  | Content Type | ข้อมูล |
+  | --- | --- |
+  | Student | นางสาวจันทร์แย้ม ยิ้มหวาน |
+  | Subject | แคลคูลัส 1 |
+  | Teacher | อ.สมหญิง รักสอน |
+
 ## ข้อควรระวัง
 
 - บัญชี Admin สร้างได้ครั้งเดียว ถ้ามีอยู่แล้ว request Register (1.1) จะตอบ 400
