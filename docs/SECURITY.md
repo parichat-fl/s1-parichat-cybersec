@@ -45,6 +45,10 @@ environment variable ซึ่งมองเห็นได้จาก `docker
 
 **Reset password token** — token ต้องมีอายุสั้นและใช้ครั้งเดียว อย่าบันทึกลง log
 
+**Mock email provider** — `config/providers/email-mock` ตัวนี้ (ใช้ตอน develop เท่านั้น) พิมพ์เนื้อหาอีเมล
+รวมถึง reset code ลง `docker logs` เพื่อให้ทดสอบ Forgot/Reset Password ได้โดยไม่ต้องต่อ SMTP
+ถ้าจะใช้ SMTP จริงให้ตั้ง `EMAIL_PROVIDER=smtp` เพราะถ้า log จริงจะเท่ากับเปิดให้ขโมย token ได้
+
 **Default port ของ Strapi** — ถ้าเปิดสู่ภายนอกตรง ๆ ให้เปลี่ยน port ที่ expose
 
 ## ตรวจสอบว่าไม่มี Secret หลุด

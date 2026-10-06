@@ -1,6 +1,14 @@
 # API requests
 # Copy this file to api.http and fill in your own credentials.
 # api.http is ignored by Git because it contains real credentials.
+#
+# วิธีใช้: เปิดด้วย VS Code REST Client แล้วรันตามลำดับ
+# ต้องรัน Login (1.2 / 2.2) ก่อนเสมอ เพราะ request อื่นดึง token
+# จาก response ของ Login ผ่าน # @name
+#
+# Forgot Password (1.4 / 2.4) ส่งอีเมลผ่าน mock provider ใน config/providers/email-mock
+# แล้วพิมพ์ reset code / reset link ลง log อ่านได้จาก
+#   docker logs 69-s1-app | findstr /C:"Mock email body"
 
 @baseUrl = http://localhost:8181
 
@@ -8,7 +16,9 @@
 ### 1. ADMIN API
 ### ============================================================================
 
-### 1.1 Admin Signup
+### 1.1 Admin Register
+# สร้างบัญชี Super Admin ได้แค่ครั้งเดียวเท่านั้น
+# ถ้าเคยสร้างแล้วจะได้ 400 "You cannot register a new super admin"
 POST {{baseUrl}}/admin/register-admin
 content-type: application/json
 
@@ -35,6 +45,7 @@ GET {{baseUrl}}/admin/users/me
 Authorization: Bearer {{adminLogin.response.body.data.token}}
 
 ### 1.4 Admin Forgot Password
+# ดู code สำหรับ 1.5 ได้จาก log: docker logs 69-s1-app
 POST {{baseUrl}}/admin/forgot-password
 content-type: application/json
 
@@ -43,6 +54,7 @@ content-type: application/json
 }
 
 ### 1.5 Admin Reset Password
+# ใส่ code ที่ได้จาก 1.4 (ใช้ได้ครั้งเดียว เปลี่ยนทุกครั้งที่รัน 1.4)
 POST {{baseUrl}}/admin/reset-password
 content-type: application/json
 
@@ -56,7 +68,8 @@ content-type: application/json
 ### 2. USER API
 ### ============================================================================
 
-### 2.1 User Signup
+### 2.1 User Register
+# รันได้ครั้งเดียวต่อ username/email (รันซ้ำจะได้ 400 email already taken)
 # @name userRegister
 POST {{baseUrl}}/api/auth/local/register
 content-type: application/json
@@ -82,6 +95,8 @@ GET {{baseUrl}}/api/users/me
 Authorization: Bearer {{userLogin.response.body.jwt}}
 
 ### 2.4 User Forgot Password
+# ตอบกลับ {"ok": true} และพิมพ์ reset link ลง log
+# ดู code สำหรับ 2.5 ได้จาก: docker logs 69-s1-app
 POST {{baseUrl}}/api/auth/forgot-password
 content-type: application/json
 
@@ -90,6 +105,8 @@ content-type: application/json
 }
 
 ### 2.5 User Reset Password
+# ใส่ code ที่ได้จาก 2.4 (ใช้ได้ครั้งเดียว เปลี่ยนทุกครั้งที่รัน 2.4)
+# รัน 2.5 สำเร็จแล้วต้องกลับไปรัน 2.2 เพื่อเอา jwt ใหม่
 POST {{baseUrl}}/api/auth/reset-password
 content-type: application/json
 

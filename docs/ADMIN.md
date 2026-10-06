@@ -35,7 +35,7 @@ Strapi Admin Panel เป็นส่วนควบคุมของระบ�
 
 ชุด request สำหรับทดสอบอยู่ใน `api.http.simple` (25 requests)
 
-- `1. ADMIN API` — signup, login, profile, forgot/reset password
+- `1. ADMIN API` — register, login, profile, forgot/reset password
 - `2. USER API` — register, login, profile, forgot/reset password
 - `3. CONTENT API` — CRUD ของ Student, Subject, Teacher
 
@@ -43,8 +43,23 @@ Token ถูกดึงอัตโนมัติผ่าน `# @name` เช
 `Authorization: Bearer {{adminLogin.response.body.data.token}}`
 ให้รัน Login ก่อนเสมอ
 
+## Forgot / Reset Password
+
+1. รัน request Forgot Password (1.4 หรือ 2.4) ระบบจะส่งอีเมลผ่าน mock provider
+2. เปิด log เพื่อเอา reset code
+
+   ```bash
+   docker logs 69-s1-app
+   ```
+
+   หาบรรทัด `Mock email body` แล้ว copy ค่าหลัง `code=` ไปใส่ใน request Reset Password
+
+3. รัน Reset Password (1.5 หรือ 2.5) ด้วย code นั้น (ใช้ได้ครั้งเดียว)
+4. ถ้าเปลี่ยน password ต้องรัน Login ใหม่เพื่อเอา token ตัวใหม่
+
 ## ข้อควรระวัง
 
-- บัญชี Admin สร้างได้ครั้งเดียว ถ้าลืม password ต้องลบ volume ของฐานข้อมูลแล้วเริ่มใหม่
+- บัญชี Admin สร้างได้ครั้งเดียว ถ้ามีอยู่แล้ว request Register (1.1) จะตอบ 400
+  "You cannot register a new super admin" ให้ใช้ request Forgot/Reset Password แทน
 - อย่า commit `api.http` เพราะมี credential จริงอยู่ในไฟล์ (อยู่ใน `.gitignore` แล้ว)
 - Admin token มีสิทธิ์เข้าถึง Content ทั้งหมด ควรใช้เฉพาะการดูแลระบบ
